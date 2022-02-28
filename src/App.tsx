@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { drawStroke, clearCanvas, setCanvasSize } from "./utils/canvasUtils";
 import {
@@ -12,12 +12,14 @@ import { historyIndexSelector } from "./modules/historyIndex/reducer";
 import { RootState } from "./utils/types";
 import { EditPanel } from "./shared/EditPanel";
 import { ColorPanel } from "./shared/ColorPanel";
+import { FilePanel } from "./shared/FilePanel";
+import { useCanvas } from "./CanvasContext";
 
 const WIDTH = 1024;
 const HEIGHT = 768;
 
 function App() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useCanvas();
   const getCanvasWithContext = (canvas = canvasRef.current) => {
     return { canvas, context: canvas?.getContext("2d") };
   };
@@ -96,6 +98,7 @@ function App() {
       </div>
       <EditPanel />
       <ColorPanel />
+      <FilePanel />
       <canvas
         onMouseDown={startDrawing}
         onMouseUp={endDrawing}
