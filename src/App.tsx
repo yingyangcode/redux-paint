@@ -4,6 +4,7 @@ import { drawStroke, clearCanvas, setCanvasSize } from "./utils/canvasUtils";
 import { beginStroke, endStroke, updateStroke } from "./actions";
 import { RootState } from "./utils/types";
 import { currentStrokeSelector } from "./rootReducer";
+import { ColorPanel } from "./shared/ColorPanel";
 
 const WIDTH = 1024;
 const HEIGHT = 768;
@@ -70,6 +71,7 @@ function App() {
           <button aria-label="Close" />
         </div>
       </div>
+      <ColorPanel />
       <canvas
         onMouseDown={startDrawing}
         onMouseUp={endDrawing}

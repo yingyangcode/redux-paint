@@ -2,6 +2,7 @@ import {
     Action,
     UPDATE_STROKE,
     BEGIN_STROKE,
+    SET_STROKE_COLOR,
     END_STROKE
   } from "./actions"
   import { RootState } from "./utils/types"
@@ -31,6 +32,15 @@ import {
           currentStroke: {
             ...state.currentStroke,
             points: [...state.currentStroke.points, action.payload]
+          }
+        }
+      }
+      case SET_STROKE_COLOR: {
+        return {
+          ...state,
+          currentStroke: {
+            ...state.currentStroke,
+            ...{ color: action.payload }
           }
         }
       }
