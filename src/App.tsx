@@ -1,15 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { drawStroke, clearCanvas, setCanvasSize } from "./utils/canvasUtils";
-import {
-  beginStroke,
-  endStroke,
-  updateStroke,
-} from "./modules/currentStroke/actions";
+import { beginStroke, updateStroke } from "./modules/currentStroke/actions";
+import { endStroke } from "./modules/sharedActions";
 import { strokesSelector } from "./modules/strokes/reducer";
 import { currentStrokeSelector } from "./modules/currentStroke/reducer";
 import { historyIndexSelector } from "./modules/historyIndex/reducer";
-import { RootState } from "./utils/types";
 import { EditPanel } from "./shared/EditPanel";
 import { ColorPanel } from "./shared/ColorPanel";
 import { FilePanel } from "./shared/FilePanel";
@@ -23,7 +19,6 @@ function App() {
   const getCanvasWithContext = (canvas = canvasRef.current) => {
     return { canvas, context: canvas?.getContext("2d") };
   };
-
   const currentStroke = useSelector(currentStrokeSelector);
   const isDrawing = !!currentStroke.points.length;
   const historyIndex = useSelector(historyIndexSelector);
@@ -59,7 +54,9 @@ function App() {
     if (!canvas || !context) {
       return;
     }
+
     setCanvasSize(canvas, WIDTH, HEIGHT);
+
     context.lineJoin = "round";
     context.lineCap = "round";
     context.lineWidth = 5;
@@ -72,20 +69,22 @@ function App() {
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement>) => {
     const { offsetX, offsetY } = nativeEvent;
-    dispatch(beginStroke(offsetX, offsetY));
+    dispatch(beginStroke({ x: offsetX, y: offsetY }));
   };
+
   const endDrawing = () => {
     if (isDrawing) {
-      dispatch(endStroke(historyIndex, currentStroke));
+      dispatch(endStroke({ historyIndex, stroke: currentStroke }));
     }
   };
+
   const draw = ({ nativeEvent }: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) {
       return;
     }
     const { offsetX, offsetY } = nativeEvent;
 
-    dispatch(updateStroke(offsetX, offsetY));
+    dispatch(updateStroke({ x: offsetX, y: offsetY }));
   };
 
   return (
